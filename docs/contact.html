@@ -106,7 +106,34 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 .sqs-gallery-design-strip .sqs-gallery{display:flex;flex-wrap:nowrap;}
 .sqs-gallery-design-strip img{flex-shrink:0;}
 [data-content-field="excerpt"] h2, .sqsrte-large{content-visibility:auto;contain-intrinsic-size:1px 1em;}
-</style></head>
+</style><script>
+(function() {
+    const originalFetch = window.fetch;
+    window.fetch = async function(...args) {
+        const response = await originalFetch.apply(this, args);
+        const url = args[0];
+        if (typeof url === 'string' && url.includes('/api/commerce/cart')) {
+            try {
+                const clone = response.clone();
+                const data = await clone.json();
+                if (data && data.cart) {
+                    delete data.cart.reservation;
+                    delete data.cartReservation;
+                    delete data.expiration;
+                }
+                return new Response(JSON.stringify(data), {
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: response.headers
+                });
+            } catch (e) {
+                console.warn("Не удалось перехватить ответ корзины:", e);
+            }
+        }
+        return response;
+    };
+})();
+</script></head>
 
   <body
     id="collection-62ffcbebeb2bef19495dbd74"
