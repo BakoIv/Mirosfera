@@ -132,34 +132,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   border-radius: 4px;
   box-shadow: 0 0 30px rgba(0,0,0,0.5);
 }
-</style><script>
-(function() {
-    const originalFetch = window.fetch;
-    window.fetch = async function(...args) {
-        const response = await originalFetch.apply(this, args);
-        const url = args[0];
-        if (typeof url === 'string' && url.includes('/api/commerce/cart')) {
-            try {
-                const clone = response.clone();
-                const data = await clone.json();
-                if (data && data.cart) {
-                    delete data.cart.reservation;
-                    delete data.cartReservation;
-                    delete data.expiration;
-                }
-                return new Response(JSON.stringify(data), {
-                    status: response.status,
-                    statusText: response.statusText,
-                    headers: response.headers
-                });
-            } catch (e) {
-                console.warn("Не удалось перехватить ответ корзины:", e);
-            }
-        }
-        return response;
-    };
-})();
-</script></head>
+</style></head>
 
   <body
     id="collection-63090bfe2954a738ff18beaa"
