@@ -25,3 +25,4 @@ cd "C:\Desing\Site1"
 python -m http.server 8000
 
 Squarespace
+замени на
